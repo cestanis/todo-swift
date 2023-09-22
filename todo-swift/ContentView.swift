@@ -2,22 +2,53 @@
 //  ContentView.swift
 //  todo-swift
 //
-//  Created by Mehmet Özesenlik on 9/22/23.
-//
 
 import SwiftUI
 
 struct ContentView: View {
+    
+    @State private var todoItems: [TodoItem] = []
+    @State private var newTodo: String = ""
+    
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+            Text("Get Todo")
+            HStack{
+                TextField("New todo", text: $newTodo) //to create a two-way binding to a mutable state
+                    .padding(10)
+                    .background(Color.gray.opacity(0.2))
+                    .cornerRadius(8)
+                Button(action: {
+                    if !newTodo.isEmpty {
+                        let item = TodoItem(text: newTodo)
+                        todoItems.append(item)
+                        newTodo = ""
+                    }
+                }) {
+                    Image(systemName: "plus")
+                        .padding(10)
+                }
+                .background(Color.blue)
+                .foregroundColor(.white)
+                .clipShape(Circle())
+            }
+            
+            .padding()
+            
+            List(todoItems) { item in
+                Text(item.text)
+            }
         }
-        .padding()
     }
 }
+
+
+struct TodoItem : Identifiable {
+    var id = UUID()
+    var text: String
+}
+
+
 
 #Preview {
     ContentView()
